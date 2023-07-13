@@ -68,7 +68,7 @@ Il y a d'abord l'importation du package biblatex avec les arguments convenants :
 % DOI et ISBN sont masqués
 \usepackage[sorting=nyt, style=authoryear-ibid, maxbibnames=8, giveninits, doi=false, isbn=false]{biblatex}
 ```
-Enfin, ce bloc est à rajouter afin d'avoir des appels de citation corrects dans le corps du textes
+Ce bloc est à rajouter afin d'avoir des appels de citation corrects dans le corps du textes
 ```TeX
 \DeclareCiteCommand{\cite}[\mkbibparens]
   {\usebibmacro{prenote}}
@@ -79,6 +79,22 @@ Enfin, ce bloc est à rajouter afin d'avoir des appels de citation corrects dans
   {\multicitedelim}
   {\usebibmacro{postnote}}
 ```
+Enfin, pour éviter le mauvais tri dans l'ordre des références, on déclare un tri spécifique :
+```TeX
+\DeclareSortingScheme{geosciencesort}{
+  \sort{
+    \field{author}
+    \field{title}
+    \field{sorttitle}
+    \field{editor}
+  }
+}
+```
+Qu'on rajoute à la fin :
+```TeX
+\ExecuteBibliographyOptions{sorting=geosciencesort}
+```
+
 
 ### Format de la urldate
 Afin d'avoir la date sous la bonne forme,
