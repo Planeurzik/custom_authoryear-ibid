@@ -22,9 +22,17 @@
     {\namepartfamily
 {}}
 
+\DeclareFieldFormat{url}{\url{#1}}
+
 %Changer les délimiteurs 
 \renewcommand{\nameyeardelim}{\addcomma\space}
 \DeclareDelimFormat{nonameyeardelim}{\addcomma\space}
+
+\renewbibmacro*{institution+location+date}{%
+  \printlist{institution}%
+  \iflistundef{location}{, }{ : \printlist{location}, }%
+  \printfield{year}%
+ }
 
 %Nécessaire pour avoir des crochets à la place des parenthèses
 \AtEveryCite{%

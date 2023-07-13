@@ -64,9 +64,10 @@ Il y a d'abord l'importation du package biblatex avec les arguments convenants :
 ```TeX
 % Sorting trie selon le nom puis l'année, puis le titre
 % Maxbibnames dit qu'au-delà de 8 noms, on garde le premier puis et al.
+% Maxcitenames dit que dans les citations au fil du texte, on ne cite pas plus de 2 noms
 % Giveninits pour avoir seulement avec les initials
 % DOI et ISBN sont masqués
-\usepackage[sorting=nyt, style=authoryear-ibid, maxbibnames=8, giveninits, doi=false, isbn=false]{biblatex}
+\usepackage[sorting=nyt, style=authoryear-ibid, maxbibnames=8, maxcitenames=2, giveninits, doi=false, isbn=false]{biblatex}
 ```
 Ce bloc est à rajouter afin d'avoir des appels de citation corrects dans le corps du textes
 ```TeX
