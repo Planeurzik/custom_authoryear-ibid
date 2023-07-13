@@ -1,0 +1,231 @@
+\ProvidesFile{authoryear-ibid.bbx}
+[\abx@bbxid]
+\RequireBibliographyStyle{authoryear}
+
+%Package permettant de tronquer les titres contenant plus de 3 mots
+\usepackage{xstring}
+
+% Commande pour renvoyer le titre tronqué (3 mots au plus, points de suspensions derrière sinon)
+\newcommand{\truncatedtitle}[1]{%
+\StrCount{#1}{\space}[\titlewords]%
+\ifnum \titlewords<3%
+#1%
+\else%
+\StrBefore[3]{#1}{ }[\truncated]%
+\IfEq{\titlewords}{2}%
+{\truncated}%
+{\truncated\dots}%
+\fi}%
+
+% Nouveau format afin de récupérer seulement le nom de famille dans l'appel de la citation
+\DeclareNameFormat{onlylastnameauthor}
+    {\namepartfamily
+{}}
+
+%Changer les délimiteurs 
+\renewcommand{\nameyeardelim}{\addcomma\space}
+\DeclareDelimFormat{nonameyeardelim}{\addcomma\space}
+
+%Nécessaire pour avoir des crochets à la place des parenthèses
+\AtEveryCite{%
+  \let\parentext=\parentexttrack%
+  \let\bibopenparen=\bibopenbracket%
+  \let\bibcloseparen=\bibclosebracket}
+
+\DeclareFieldFormat{urldate}{\mkbibmonth{\thefield{urlmonth}} \printfield{urlday}, \thefield{urlyear}}
+
+\renewbibmacro{urldate}{(accessed \printurldate)}
+
+\DeclareBibliographyDriver{article_custom}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \ifnameundef{author}{}{\printnames{author}, }%
+  \printfield{title}%
+  , %
+  \printfield{journaltitle}%
+  \addspace%
+  \textbf{\printfield{volume}}%
+  \addspace%
+  (\printfield{year}), %
+  no. \printfield{number}, \printfield{pages}%
+  \newunit%
+  \usebibmacro{finentry}}
+  
+  
+\DeclareBibliographyDriver{book_custom}{%
+\ifnameundef{author}{}{\printnames{author}, }%
+  \printfield{title}, %
+  \iffieldundef{edition}{\ifnameundef{editor}{}{(\printnames{editor}, ed.)}}{
+  \printfield{edition}, }
+  \printlist{publisher}%
+: %
+\printlist{location}%
+, %
+\printfield{year}%
+\finentry}
+
+\DeclareBibliographyDriver{collection_custom}{%
+  \ifnameundef{author}{}{\printnames{author}, }%
+  \printfield{title}%
+  \iffieldundef{edition}{\ifnameundef{editor}{,}{ (\printnames{editor}, eds.),}}{
+  \addspace\printfield{edition},}
+  \printlist{publisher}: %
+\printlist{location}, %
+\printfield{year}%
+\finentry}
+
+\DeclareBibliographyDriver{inbook_custom}{%
+  \printnames{author}, %
+  \printfield{title}, %
+  \printfield{booktitle}, 
+  \iffieldundef{edition}{\ifnameundef{editor}{}{(\printnames{editor}, ed.)}}{
+  \printfield{edition}, }
+  \printlist{publisher}: %
+\printlist{location}, %
+\printfield{year}, %
+\printfield{pages}
+\finentry}
+
+\DeclareBibliographyDriver{incollection_custom}{%
+  \printnames{author}, %
+  \printfield{title}, %
+  \iffieldundef{edition}{\ifnameundef{editor}{}{(\printnames{editor}, eds.),}}{
+  \printfield{edition}, }
+  \printlist{publisher}: %
+\printlist{location}, %
+\printfield{year}, \printfield{pages}.\iffieldundef{url}{}{ Online at \printfield{url} \usebibmacro{urldate}}%
+\finentry}
+
+\DeclareBibliographyDriver{inproceedings_custom}{%
+  \ifnameundef{author}{}{\printnames{author}, }%
+  \printfield{title} in \printfield{booktitle} %
+  \iffieldundef{edition}{\ifnameundef{editor}{}{(\printnames{editor}, eds.),}}{
+  \printfield{edition}, }
+  \printlist{publisher}%
+: 
+\printlist{location}%
+, 
+\printfield{year}, \printfield{pages}.%
+\finentry}
+
+% Pour retirer les guillemets aux titres de thèses
+\DeclareFieldFormat[thesis]{citetitle}{#1}
+\DeclareFieldFormat[thesis]{title}{#1} 
+
+\DeclareBibliographyDriver{thesis_custom}{%
+  \ifnameundef{author}{}{\printnames{author}, }%
+  \textit{\printfield{title}}, \printfield{type}, %
+  \iffieldundef{edition}{\ifnameundef{editor}{}{(\printnames{editor}, ed.)}}{
+  \printfield{edition}, }\usebibmacro{institution+location+date}, \printfield{year}.%
+  \iffieldundef{url}{}{ Online at \printfield{url} \usebibmacro{urldate}}%
+\finentry}
+ 
+\DeclareBibliographyDriver{report_custom}{%
+  \ifnameundef{author}{}{\printnames{author}, }%
+  \printfield{title}, \printfield{type}, %
+  \iffieldundef{edition}{\ifnameundef{editor}{}{(\printnames{editor}, ed.)}}{
+  \printfield{edition}, }\usebibmacro{institution+location+date}, \printfield{year}.%
+  \iffieldundef{url}{}{ Online at \printfield{url} \usebibmacro{urldate}}%
+\finentry}
+
+\DeclareBibliographyDriver{inreference_custom}{%
+  \ifnameundef{author}{}{\printnames{author}, }%
+  \mkbibquote{\textit{\printfield{title}}},%
+  \iffieldundef{edition}{\ifnameundef{editor}{}{(\printnames{editor}, ed.)}}{
+  \printfield{edition}, }
+  \printfield{booktitle} (\printdate). 
+  \iffieldundef{url}{}{Online at \printfield{url} \usebibmacro{urldate}}%
+\finentry}
+
+% Pour retirer les guillemets aux titres de brevets
+\DeclareFieldFormat[patent]{citetitle}{#1}
+\DeclareFieldFormat[patent]{title}{#1} 
+
+\DeclareBibliographyDriver{patent_custom}{%
+  \ifnameundef{author}{}{\printnames{author}, }%
+  \textit{\printfield{title}},%
+  \iffieldundef{edition}{\ifnameundef{editor}{}{(\printnames{editor}, ed.)}}{
+  \printfield{edition}, }
+  \printfield{type}, \printfield{number}, \printfield{year}. 
+  \iffieldundef{url}{}{Online at \printfield{url} \usebibmacro{urldate}}%
+\finentry}
+
+\DeclareBibliographyDriver{unpublished_custom}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \printnames{author}, %
+  \printfield{title}, %
+  \printdate. %
+  \iffieldundef{url}{}{Online at \printfield{url} \usebibmacro{urldate}}%
+  \usebibmacro{finentry}}
+
+\DeclareBibliographyDriver{online_custom}{%
+  \ifnameundef{author}{}{\printnames{author}, }%
+  \mkbibquote{\textit{\printfield{title}}} %
+  \textit{\printfield{titleaddon}}, 
+  (\printdate). %
+  \iffieldundef{url}{}{Online at \printfield{url} \usebibmacro{urldate}}%
+\finentry} 
+
+\DeclareBibliographyDriver{video_custom}{%
+\ifnameundef{author}{}{\printnames{author}, }%
+  \mkbibquote{\textit{\printfield{title}}}, %
+  video, %
+  \printlist{publisher}, %
+  (\printdate). %
+  \iffieldundef{url}{}{Online at \printfield{url} \usebibmacro{urldate}}%
+\finentry}
+
+\DeclareBibliographyDriver{audio_custom}{%
+\ifnameundef{author}{}{\printnames{author}, }%
+\mkbibquote{\printfield{title}}, podcast. %
+\iffieldundef{url}{}{Online at \printfield{url} \usebibmacro{urldate}}%
+\finentry}
+
+\DeclareBibliographyDriver{misc_custom}{
+\ifnameundef{author}{}{\printnames{author}, }%
+\mkbibquote{\printfield{title}}, %
+\printlist{publisher}, %
+\iffieldundef{version}{}{\printfield{version} }%
+(\printdate). %
+\iffieldundef{url}{}{Online at \printfield{url} \usebibmacro{urldate}}
+\finentry}
+
+\DeclareBibliographyDriver{software_custom}{%
+\ifnameundef{author}{}{\printnames{author}, }%
+\mkbibquote{\textit{\printfield{title}}}, %
+software, %
+\printlist{publisher}, %
+\iffieldundef{version}{}{\printfield{version} }%
+(\printdate). %
+\iffieldundef{url}{}{Online at \printfield{url} \usebibmacro{urldate}}
+\finentry}
+
+\DeclareBibliographyDriver{artwork_custom}{
+\usebibmacro{bibindex}%
+\usebibmacro{begentry}%
+\ifnameundef{author}{}{\printnames{author}, }%
+\mkbibquote{\textit{\printfield{title}}}, %
+\printdate. %
+\iffieldundef{url}{}{Online at \printfield{url} \usebibmacro{urldate}}
+\finentry}
+
+\DeclareBibliographyAlias{article}{article_custom}
+\DeclareBibliographyAlias{book}{book_custom}
+\DeclareBibliographyAlias{collection}{collection_custom}
+\DeclareBibliographyAlias{inbook}{inbook_custom}
+\DeclareBibliographyAlias{incollection}{incollection_custom}
+\DeclareBibliographyAlias{inproceedings}{inproceedings_custom}
+\DeclareBibliographyAlias{thesis}{thesis_custom}
+\DeclareBibliographyAlias{report}{report_custom}
+\DeclareBibliographyAlias{inreference}{inreference_custom}
+\DeclareBibliographyAlias{patent}{patent_custom}
+\DeclareBibliographyAlias{unpublished}{unpublished_custom}
+\DeclareBibliographyAlias{online}{online_custom}
+\DeclareBibliographyAlias{video}{video_custom}
+\DeclareBibliographyAlias{audio}{audio_custom}
+\DeclareBibliographyAlias{misc}{misc_custom}
+\DeclareBibliographyAlias{software}{software_custom}
+\DeclareBibliographyAlias{artwork}{artwork_custom}
+
+\endinput
