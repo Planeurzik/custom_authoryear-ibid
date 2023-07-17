@@ -11,4 +11,5 @@ Copier les fichiers .bbx dans le dossier de l'installation TeX
 \addto\captionsenglish{\renewcommand{\refname}{References / Références}}
 ```
 **Testé avec cedram.cls sur un article des CRMATHS**
+
 /!\ A mettre dans le préambule du fichier TeX 
