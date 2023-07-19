@@ -30,7 +30,7 @@
 
 \renewbibmacro*{institution+location+date}{%
   \printlist{institution}%
-  \iflistundef{location}{, }{ : \printlist{location}, }%
+  \iflistundef{location}{, }{: \printlist{location}, }%
   \printfield{year}%
  }
 
@@ -62,10 +62,9 @@
   
 \DeclareBibliographyDriver{book_custom}{%
 \ifnameundef{author}{}{\printnames{author}, }%
-  \printfield{title}, %
-  \iffieldundef{edition}{\ifnameundef{editor}{}{(\printnames{editor}, ed.), }}{
-  \printfield{edition}, }
-  \printlist{publisher}: %
+\printfield{title}%
+\iffieldundef{edition}{\ifnameundef{editor}{, }{ (\printnames{editor}, ed.), }}{, \printfield{edition}, }%
+\printlist{publisher}: %
 \printlist{location}, %
 \printfield{year}%
 \finentry}
@@ -232,5 +231,27 @@ software, %
 \DeclareBibliographyAlias{misc}{misc_custom}
 \DeclareBibliographyAlias{software}{software_custom}
 \DeclareBibliographyAlias{artwork}{artwork_custom}
+
+% Redefine the month field format
+\DeclareFieldFormat{bibmonth}{\iffieldundef{shortmonth}{#1}{\mkbibmonth{\thefield{shortmonth}}}}
+\DeclareFieldFormat{mkbibmonth}{\bibstring{\thefield{#1}}}
+
+% Provide full month names
+\DefineBibliographyStrings{english}{%
+  january = {January},
+  february = {February},
+  march = {March},
+  april = {April},
+  may = {May},
+  june = {June},
+  july = {July},
+  august = {August},
+  september = {September},
+  october = {October},
+  november = {November},
+  december = {December}
+}
+
+\renewcommand*{\finalnamedelim}{ and\addspace}
 
 \endinput
