@@ -1,4 +1,42 @@
 # Fichier .bbx Géosciences
+## A mettre au début du fichier TeX
+Malheureusement, pour le moment, j'ai un bout de code qui ne peut pas être mis dans le bbx mais dans le fichier TeX.
+
+Il y a d'abord l'importation du package biblatex avec les arguments convenants :
+```TeX
+% Sorting trie selon le nom puis l'année, puis le titre
+% Maxbibnames dit qu'au-delà de 8 noms, on garde le premier puis et al.
+% Maxcitenames dit que dans les citations au fil du texte, on ne cite pas plus de 2 noms
+% Giveninits pour avoir seulement avec les initials
+% DOI et ISBN sont masqués
+\usepackage[sorting=nyt, style=authoryear-ibid, maxbibnames=8, maxcitenames=2, giveninits, doi=false, isbn=false]{biblatex}
+```
+Ce bloc est à rajouter afin d'avoir des appels de citation corrects dans le corps du textes
+```TeX
+\DeclareCiteCommand{\cite}[\mkbibparens]
+  {\usebibmacro{prenote}}
+  {\ifnameundef{labelname}
+    {\printtext[bibhyperref]{\textit{\truncatedtitle{\thefield{title}}}, \printfield{year}}}
+    {\usebibmacro{citeindex}%
+     \usebibmacro{cite}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+```
+Enfin, pour éviter le mauvais tri dans l'ordre des références, on déclare un tri spécifique :
+```TeX
+\DeclareSortingScheme{geosciencesort}{
+  \sort{
+    \field{author}
+    \field{title}
+    \field{sorttitle}
+    \field{editor}
+  }
+}
+```
+Qu'on rajoute à la fin :
+```TeX
+\ExecuteBibliographyOptions{sorting=geosciencesort}
+```
 ## Commande `\truncatedtitle`
 La nouvelle commande déclarée au début est `\truncatedtitle` et permet, dans les appels de citation, de garder au plus 3 mots et de rajouter des points de suspensions s'il y en a plus de 3.
 
@@ -57,44 +95,6 @@ Enfin, on rajoute après le `\DeclareBibliographyDriver`,
 \DeclareBibliographyAlias{type}{type_custom}
 ```
 
-## A mettre au début du fichier TeX
-Malheureusement, pour le moment, j'ai un bout de code qui ne peut pas être mis dans le bbx mais dans le fichier TeX.
-
-Il y a d'abord l'importation du package biblatex avec les arguments convenants :
-```TeX
-% Sorting trie selon le nom puis l'année, puis le titre
-% Maxbibnames dit qu'au-delà de 8 noms, on garde le premier puis et al.
-% Maxcitenames dit que dans les citations au fil du texte, on ne cite pas plus de 2 noms
-% Giveninits pour avoir seulement avec les initials
-% DOI et ISBN sont masqués
-\usepackage[sorting=nyt, style=authoryear-ibid, maxbibnames=8, maxcitenames=2, giveninits, doi=false, isbn=false]{biblatex}
-```
-Ce bloc est à rajouter afin d'avoir des appels de citation corrects dans le corps du textes
-```TeX
-\DeclareCiteCommand{\cite}[\mkbibparens]
-  {\usebibmacro{prenote}}
-  {\ifnameundef{labelname}
-    {\printtext[bibhyperref]{\textit{\truncatedtitle{\thefield{title}}}, \printfield{year}}}
-    {\usebibmacro{citeindex}%
-     \usebibmacro{cite}}}
-  {\multicitedelim}
-  {\usebibmacro{postnote}}
-```
-Enfin, pour éviter le mauvais tri dans l'ordre des références, on déclare un tri spécifique :
-```TeX
-\DeclareSortingScheme{geosciencesort}{
-  \sort{
-    \field{author}
-    \field{title}
-    \field{sorttitle}
-    \field{editor}
-  }
-}
-```
-Qu'on rajoute à la fin :
-```TeX
-\ExecuteBibliographyOptions{sorting=geosciencesort}
-```
 
 
 ### Format de la urldate
