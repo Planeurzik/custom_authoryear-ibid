@@ -1,6 +1,6 @@
 # Fichier .bbx Maths
 
-## A mettre au début du fichier TeX
+## A mettre dans le préambule du fichier TeX
 Malheureusement, pour le moment, j'ai un bout de code qui ne peut pas être mis dans le bbx mais dans le fichier TeX.
 
 Il y a d'abord l'importation du package biblatex avec les arguments convenants :
@@ -22,10 +22,17 @@ Enfin, pour éviter le mauvais tri dans l'ordre des références, on déclare un
     \field{editor}
   }
 }
-```
-Qu'on rajoute à la fin :
-```TeX
+
 \ExecuteBibliographyOptions{sorting=mathssort}
+```
+
+Rappel : pour utiliser la bibliographie en BibLaTeX, on rajoute dans le préambule
+```TeX
+\addbibresource{le_nom_du_fichier.bib}
+```
+Et à l'endroit où l'on veut mettre la biblio :
+```TeX
+\printbibliography
 ```
 ## Commande `\truncatedtitle`
 La nouvelle commande déclarée au début est `\truncatedtitle` et permet, dans les appels de citation, de garder au plus 3 mots et de rajouter des points de suspensions s'il y en a plus de 3.
